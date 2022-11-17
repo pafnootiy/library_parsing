@@ -1,0 +1,11 @@
+
+
+__pycache__
+/books
+/images
+/venv
+*.gitattributes
+*bs4_tutoria.py
+*parsing_page_func.py
+*test.py
+/.idea
