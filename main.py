@@ -34,6 +34,11 @@ def get_generated_book(response, book_id):
     books_image_part = soup.select_one("div.bookimage img")["src"]
     image_url = urljoin(response.url, books_image_part)
 
+    # src for picture
+    img_id = books_image_part.split("/")[2]
+    split_img_id= img_id.split(".")
+    src_img =str(book_id)+"."+books_title.strip()+"."+split_img_id[1]
+
     #  Parsing book's comments
 
     books_comments = soup.select("div.texts")
@@ -44,9 +49,9 @@ def get_generated_book(response, book_id):
 
     genres_selector = "span.d_book"
     books_genres = soup.select(genres_selector)
-    genres = [genre.select_one("a")["title"].split("-")[0].replace(",", '  ')
-              for genre in
-              books_genres]
+    for genre in books_genres:
+        genres=genre.select_one("a")["title"].split("-")[0].split(",")
+
 
     generated_book = {
         "title": books_title.strip(),
@@ -54,16 +59,17 @@ def get_generated_book(response, book_id):
         "image": image_url,
         "comments": comments,
         "genre": genres,
-        "book_id": book_id.strip()
+        "book_id": book_id,
+        "src_img": src_img
     }
-
+    # print(generated_book)
     return generated_book
 
 
 def save_book_in_json(books, filepath_to_json):
     json_filepath = os.path.join(filepath_to_json, "books.json")
     with open(json_filepath, "w", encoding='utf8') as my_file:
-        json.dump(books, my_file, ensure_ascii=False)
+        json.dump(books, my_file, ensure_ascii=False,indent=4)
 
 
 def download_txt(books_dictionary, filepath_to_text_directory, book_id):
@@ -119,8 +125,8 @@ def main():
             os.makedirs(filepath_to_books, exist_ok=True)
             os.makedirs(filepath_to_images, exist_ok=True)
             os.makedirs(filepath_to_json, exist_ok=True)
-            # download_txt(books_generated, filepath_to_books, book_id)
-            # download_img(filepath_to_images, books_generated, book_id)
+            download_txt(books_generated, filepath_to_books, book_id)
+            download_img(filepath_to_images, books_generated, book_id)
             save_book_in_json(books_generated, filepath_to_json)
 
 

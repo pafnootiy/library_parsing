@@ -32,7 +32,7 @@ def main():
     parser.add_argument("--start_page", "-s", help="first page", type=int,
                         default=1)
     parser.add_argument("--end_page", "-e", help="last page", type=int,
-                        default=7)
+                        default=3)
     parser.add_argument('--skip_imgs', action='store_true')
     parser.add_argument('--skip_txt', action='store_true')
     args = parser.parse_args()
